@@ -148,7 +148,7 @@ export default function App() {
               data-testid="delete-task-btn"
               style={{ color: '#d32f2f', cursor: 'pointer' }}
             >
-              Delete
+              Delete.
             </button>
           </li>
         ))}
