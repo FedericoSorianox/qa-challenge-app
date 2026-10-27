@@ -1,30 +1,58 @@
-# Senior QE Take-Home Challenge — Minimal Automation
+# QA Challenge App
 
-A lightweight React application (Authentication + Release Task Tracker) paired with an end-to-end Playwright test suite using the Page Object Model (POM) pattern and a GitHub Actions CI pipeline.
+A small React task tracker with a login screen, built with Vite and TypeScript. The repository also includes tests written with Playwright.
 
-## Tech Stack & Design Decisions
-- **Vite + React (TypeScript):** Fast bootstrapping with minimal boilerplate.
-- **Playwright + TypeScript:** Reliable auto-waiting, native TypeScript support, and built-in `webServer` management (automatically spins up the React dev server on port `5173` before running tests).
-- **Page Object Model (`tests/pages/TaskPage.ts`):** Encapsulates UI locators and page interactions, keeping test specs clean, readable, and focused on assertions.
-- **Resilient Locators:** Combines user-facing accessible locators (`getByLabel`, `getByRole`) with dedicated `data-testid` attributes.
+## Requirements
 
-## Test Coverage (`tests/tasks.spec.ts`)
-1. **Authentication (Negative):** Blocks access and displays an error message on invalid login credentials.
-2. **Happy Path (Auth + CRUD):** Authenticates (`admin` / `qa123`), creates a new task, resets input, and increments the pending counter.
-3. **Input Validation (Negative):** Prevents adding empty or whitespace-only tasks and displays validation feedback.
-4. **State Lifecycle:** Marks a task as completed (verifying counter update and strike-through styling) and deletes it from the DOM.
+- Node.js 
+- npm
 
-## Running Locally
+## Run the app locally
+
+From the project directory, install the dependencies and start the Vite development server:
 
 ```bash
-# 1. Install dependencies
-npm install
+npm ci
+npm run dev
+```
 
-# 2. Install Playwright Chromium binary
+Open the local URL printed by Vite (by default, `http://localhost:5173`). 
+
+Sign in with the demo credentials:
+Username: admin
+Password: qa123
+
+
+The app keeps its task and login state in memory, reloading the page resets it.
+
+## Run the tests locally
+
+Install the Playwright Chromium browser once after installing the npm dependencies:
 npx playwright install chromium
 
-# 3. Run automated tests (automatically starts the app server)
+Run the end-to-end suite:
 npx playwright test
 
-# Optional: Run the app manually in the browser (Demo login: admin / qa123)
-npm run dev
+
+Playwright starts the Vite server on port `5173` automatically for the test run and reuses an existing server when available. 
+The tests run in Chromium.
+
+To open the generated HTML report after a run:
+npx playwright show-report
+
+
+## Test coverage
+
+The Playwright suite in `tests/tasks.spec.ts` covers these five browser scenarios:
+
+- Invalid login shows an error and does not reveal the task tracker.
+- Valid login with the demo credentials reveals the task tracker.
+- Adding a task displays its title, clears the input, and increments the pending task count.
+- Submitting an empty or whitespace only title shows a validation error and does not create a task.
+- Completing a task decrements the pending count and applies strikethrough styling. Deleting it removes it from the list.
+
+## Other checks
+
+The package also provides these scripts:
+npm run build  # Type-check and create a production build
+
